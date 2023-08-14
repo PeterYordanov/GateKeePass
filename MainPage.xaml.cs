@@ -1,24 +1,21 @@
-﻿namespace GateKeePass;
+namespace GateKeePass;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	public Command PickDatabaseCommand { get; set; }
 
 	public MainPage()
 	{
 		InitializeComponent();
+		PickDatabaseCommand = new Command(OnDatabasePicked);
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+    private async void OnDatabasePicked(object obj)
+    {
+		FileResult fileResult = await FilePicker.PickAsync();
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+        CounterBtn.Text = fileResult.FullPath;
+        SemanticScreenReader.Announce("Test");
+    }
 }
 
