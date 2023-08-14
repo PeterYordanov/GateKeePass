@@ -26,13 +26,28 @@
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I"
                 FontSize="18"
+                x:Name="Path"
                 HorizontalOptions="Center" />
 
             <Button
-                x:Name="CounterBtn"
+                x:Name="PickDatabase"
                 Text="Click me"
                 SemanticProperties.Hint="Counts the number of times you click"
                 Command="{Binding PickDatabaseCommand}"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="PickKeyfile"
+                Text="Click me"
+                SemanticProperties.Hint="Counts the number of times you click"
+                Command="{Binding PickKeyfileCommand}"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="OpenDatabase"
+                Text="Click me"
+                SemanticProperties.Hint="Counts the number of times you click"
+                Command="{Binding OpenDatabaseCommand}"
                 HorizontalOptions="Center" />
 
         </VerticalStackLayout>
