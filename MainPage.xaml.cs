@@ -1,70 +1,121 @@
+using System.Collections.ObjectModel;
 using System.Windows.Input;
-using KeePassLib.Keys;
-using KeePassLib.Serialization;
+using GateKeePass.Extensions;
 using KeePassLib;
-using System.Data;
-using KeePassLib.Collections;
 
 namespace GateKeePass;
 
-public partial class MainPage : ContentPage
+public partial class MainPage : ContentPage, IQueryAttributable
 {
-    public ICommand PickDatabaseCommand { get; set; }
-    public ICommand PickKeyfileCommand { get; set; }
-    public ICommand OpenDatabaseCommand { get; set; }
-
-    string keyFilePath;
-    string databaseFilePath;
-
+    public ObservableCollection<string> Items { get; set; }
+    private PwDatabase db;
+    PwGroup currentGroup;
     public MainPage()
     {
         InitializeComponent();
-        PickDatabaseCommand = new Command(OnDatabasePicked);
-        PickKeyfileCommand = new Command(OnKeyfilePicked);
-        OpenDatabaseCommand = new Command(OnDatabaseOpened);
-
+        Items = new ObservableCollection<string>();
         BindingContext = this;
     }
 
-    public async void OnDatabaseOpened(object obj)
+    protected override void OnAppearing()
     {
-        // Specify the path to your KeePass database file
-        string password = "";
-
-        // Open the KeePass database
-        var ioConnectionInfo = new IOConnectionInfo { Path = databaseFilePath };
-        var compKey = new CompositeKey();
-
-        // Add the master password and key file to the composite key
-        compKey.AddUserKey(new KcpPassword(password));
-        compKey.AddUserKey(new KcpKeyFile(keyFilePath));
-
-        var database = new PwDatabase();
-        database.Open(ioConnectionInfo, compKey, null);
-
-        bool isOpen = database.IsOpen;
-
-        PwObjectList<PwEntry> entries = database.RootGroup.GetEntries(true);
+        base.OnAppearing();
     }
 
-    public async void OnDatabasePicked(object obj)
+    public PwGroup FindGroupRecursive(PwGroup parentGroup, string groupName)
     {
-        FileResult fileResult = await FilePicker.PickAsync();
+        foreach (PwGroup group in parentGroup.Groups)
+        {
+            if (group.Name == groupName)
+            {
+                return group;
+            }
 
-        databaseFilePath = fileResult.FullPath;
+            PwGroup foundGroup = FindGroupRecursive(group, groupName);
+            if (foundGroup != null)
+            {
+                return foundGroup;
+            }
+        }
 
-        SemanticScreenReader.Announce("Test");
+        return null;
     }
 
-
-    public async void OnKeyfilePicked(object obj)
+    private void RefreshUI()
     {
-        FileResult fileResult = await FilePicker.PickAsync();
+        Items.Clear();
+        if (currentGroup != null)
+        {
+            foreach (var item in currentGroup.Groups)
+            {
+                Items.Add(item.Name);
+            }
 
-        keyFilePath = fileResult.FullPath;
-
-        SemanticScreenReader.Announce("Test");
+            foreach (var item in currentGroup.Entries)
+            {
+                Items.Add(item.Strings.ReadSafe(PwDefs.TitleField));
+            }
+        }
     }
 
+    public void OnItemTapped(object sender, ItemTappedEventArgs e)
+    {
+        string tappedEntry = e.Item as string;
+
+        Items.Clear();
+
+        if (tappedEntry != null)
+        {
+            Console.WriteLine(tappedEntry);
+
+            currentGroup = FindGroupRecursive(currentGroup, tappedEntry);
+
+            if (currentGroup != null)
+            {
+                if (currentGroup.Groups != null)
+                {
+                    foreach (var item in currentGroup.Groups)
+                    {
+                        Items.Add("Group: " + item.Name);
+                    }
+                }
+
+                if (currentGroup.Entries != null)
+                {
+                    foreach (var item in currentGroup.Entries)
+                    {
+                        Items.Add("Entry: " + item.Name);
+                    }
+                }
+            }
+        }
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        db = query["Database"] as PwDatabase;
+        currentGroup = db.RootGroup;
+        foreach (var item in currentGroup.Groups)
+        {
+            Items.Add(item.Name);
+        }
+    }
+
+    protected override bool OnBackButtonPressed()
+    {
+        if (currentGroup.ParentGroup != null)
+        {
+            currentGroup = currentGroup.ParentGroup;
+
+            RefreshUI();
+        }
+        else
+        {
+            db.Close();
+            db = null;
+            Navigation.PopAsync();
+        }
+        return true;
+    }
 }
 

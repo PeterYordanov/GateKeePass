@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GateKeePass.AuthenticationPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            
+            <StackLayout>
+                <Label Text="Password" />
+                <Entry IsPassword="True" x:Name="PasswordField" />
+            </StackLayout>
+
+            <Entry x:Name="DatabaseFilepath" IsEnabled="False" />
+            <Button
+                x:Name="PickDatabase"
+                Text="Select Database"
+                Command="{Binding PickDatabaseCommand}"
+                HorizontalOptions="Center" />
+
+            <Entry x:Name="KeyFilepath" IsEnabled="False" />
+            <Button
+                x:Name="PickKeyfile"
+                Text="Select Key File"
+                Command="{Binding PickKeyfileCommand}"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="OpenDatabase"
+                Text="Open"
+                Command="{Binding OpenDatabaseCommand}"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

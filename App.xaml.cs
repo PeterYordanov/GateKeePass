@@ -6,6 +6,9 @@ public partial class App : Application
 	{
 		InitializeComponent();
 
-		MainPage = new AppShell();
+        Routing.RegisterRoute(nameof(GateKeePass.MainPage), typeof(MainPage));
+        Routing.RegisterRoute(nameof(AuthenticationPage), typeof(AuthenticationPage));
+
+        MainPage = new AppShell();
 	}
 }

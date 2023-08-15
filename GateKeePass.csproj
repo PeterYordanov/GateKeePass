@@ -59,4 +59,19 @@
 		<PackageReference Include="System.Security.Cryptography.ProtectedData" Version="7.0.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="MainPage.xaml.cs">
+	    <DependentUpon>MainPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="AuthenticationPage.xaml.cs">
+	    <DependentUpon>AuthenticationPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>
