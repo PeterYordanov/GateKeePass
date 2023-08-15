@@ -76,7 +76,7 @@ public partial class MainPage : ContentPage, IQueryAttributable
                 {
                     foreach (var item in currentGroup.Groups)
                     {
-                        Items.Add("Group: " + item.Name);
+                        Items.Add(item.Name);
                     }
                 }
 
@@ -84,7 +84,7 @@ public partial class MainPage : ContentPage, IQueryAttributable
                 {
                     foreach (var item in currentGroup.Entries)
                     {
-                        Items.Add("Entry: " + item.Name);
+                        Items.Add(item.Name);
                     }
                 }
             }
