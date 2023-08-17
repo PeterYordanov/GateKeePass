@@ -29,6 +29,16 @@ namespace GateKeePass.Database
             Database.Open(_connectionInfo, compKey, null);
         }
 
+        public bool IsOpen()
+        {
+            return Database.IsOpen;
+        }
+
+        public PwGroup GetRootGroup()
+        {
+            return Database.RootGroup;
+        }
+
         public PwGroup FindGroup(string groupName)
         {
             return Database.RootGroup.FindCreateGroup(groupName, false);
@@ -56,6 +66,7 @@ namespace GateKeePass.Database
         public PwEntry FindEntry(string groupName, string entryTitle)
         {
             PwGroup targetGroup = Database.RootGroup.FindCreateGroup(groupName, false);
+
             if (targetGroup == null)
             {
                 return null;
@@ -85,7 +96,7 @@ namespace GateKeePass.Database
             //    Database.RootGroup.AddEntry(entry, true);
             //}
 
-            public void SaveDatabase()
+        public void SaveDatabase()
         {
             NullStatusLogger statusLogger = new NullStatusLogger();
 

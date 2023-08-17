@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/dotnet/2021/maui/design"
              xmlns:local="clr-namespace:GateKeePass"
+             x:Name="page"
              x:Class="GateKeePass.MainPage">
 
     <ScrollView>
@@ -10,11 +13,36 @@
                       ItemTapped="OnItemTapped">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding .}" />
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical">
+                                <Label Text="{Binding Name}" TextColor="White"/>
+                                <Label Text="{Binding Id}" TextColor="White"/>
+                                <Label Text="{Binding Uuid}" TextColor="White"/>
+                            </StackLayout>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Edit" Command="{Binding EditCommand, Source={x:Reference page}}" CommandParameter="{Binding .}"/>
+                                <MenuItem Text="Delete" Command="{Binding DeleteCommand, Source={x:Reference page}}" CommandParameter="{Binding .}"/>
+                            </ViewCell.ContextActions>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+            <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+                <Button x:Name="FloatingActionButton"
+                    Text="+"
+                    CornerRadius="28"
+                    WidthRequest="56"
+                    HeightRequest="56"
+                    AbsoluteLayout.LayoutBounds="1, 1, AutoSize, AutoSize"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    Command="{Binding AddCommand}"
+                    Margin="0,0,20,20"/>
+                
+            </AbsoluteLayout>
+
         </StackLayout>
+        
     </ScrollView>
 
 </ContentPage>

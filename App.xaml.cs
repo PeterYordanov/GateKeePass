@@ -8,6 +8,8 @@ public partial class App : Application
 
         Routing.RegisterRoute(nameof(GateKeePass.MainPage), typeof(MainPage));
         Routing.RegisterRoute(nameof(AuthenticationPage), typeof(AuthenticationPage));
+        Routing.RegisterRoute(nameof(GroupPage), typeof(GroupPage));
+        Routing.RegisterRoute(nameof(EntryPage), typeof(EntryPage));
 
         MainPage = new AppShell();
 	}

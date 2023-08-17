@@ -3,6 +3,7 @@ using KeePassLib.Keys;
 using KeePassLib.Serialization;
 using KeePassLib;
 using GateKeePass.Extensions;
+using GateKeePass.Database;
 
 namespace GateKeePass;
 
@@ -33,17 +34,19 @@ public partial class AuthenticationPage : ContentPage
     public async void OnDatabaseOpened(object obj)
     {
         // Open the KeePass database
-        var ioConnectionInfo = new IOConnectionInfo { Path = DatabaseFilepath.Text };
-        var compKey = new CompositeKey();
+        //var ioConnectionInfo = new IOConnectionInfo { Path = DatabaseFilepath.Text };
+        //var compKey = new CompositeKey();
 
-        // Add the master password and key file to the composite key
-        compKey.AddUserKey(new KcpPassword(PasswordField.Text));
-        compKey.AddUserKey(new KcpKeyFile(KeyFilepath.Text));
+        //// Add the master password and key file to the composite key
+        //compKey.AddUserKey(new KcpPassword(PasswordField.Text));
+        //compKey.AddUserKey(new KcpKeyFile(KeyFilepath.Text));
 
-        var database = new PwDatabase();
-        database.Open(ioConnectionInfo, compKey, null);
+        //var database = new PwDatabase();
+        //database.Open(ioConnectionInfo, compKey, null);
 
-        if(database.IsOpen)
+        KDBXDatabase database = new KDBXDatabase(DatabaseFilepath.Text, KeyFilepath.Text, PasswordField.Text);
+
+        if(database.IsOpen())
         {
             await Shell.Current.GoToPageAsync(typeof(MainPage), new Dictionary<string, object>() {
                 { "Database", database }
